@@ -1,13 +1,12 @@
 Summary:	Realistic sky generator
 Name:		stellarium
-Version:	0.11.4
+Version:	0.12.0
 Release:	2
 License:	GPL v2
 Group:		X11/Applications/Science
 Source0:	http://downloads.sourceforge.net/stellarium/%{name}-%{version}.tar.gz
-# Source0-md5:	f5b409745f393d80003d57fd276142f4
+# Source0-md5:	1bcff9abc5eb8acd56acd13211fb1a0b
 URL:		http://www.stellarium.org/
-BuildRequires:	ImageMagick-coders
 BuildRequires:	OpenGL-devel
 BuildRequires:	QtGui-devel
 BuildRequires:	QtNetwork-devel
@@ -25,6 +24,8 @@ BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	qt-build
+Requires(post,postun):	/usr/bin/gtk-update-icon-cache
+Requires(post,postun):	hicolor-icon-theme
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -50,8 +51,6 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-convert -geometry 48x48 data/icon.bmp $RPM_BUILD_ROOT%{_pixmapsdir}/stellarium.png
-
 cat > $RPM_BUILD_ROOT%{_desktopdir}/stellarium.desktop <<EOF
 [Desktop Entry]
 Type=Application
@@ -64,12 +63,19 @@ StartupNotify=true
 Categories=GTK;Astronomy;Education;Science;
 EOF
 
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{cv,ht,haw,hrx,lb,sah,sco,su}
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/{cv,gn,ht,haw,hrx,lb,nan,sah,sco,su}
+%{__rm} -r $RPM_BUILD_ROOT%{_iconsdir}/hicolor/512x512
 
 %find_lang %{name} --all-name
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+%update_desktop_database
+
+%postun
+%update_desktop_database
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -77,6 +83,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %{_datadir}/%{name}
 %{_desktopdir}/stellarium.desktop
-%{_pixmapsdir}/stellarium.png
+%{_iconsdir}/hicolor/*/apps/stellarium.png
 %{_mandir}/man1/%{name}.1*
 
