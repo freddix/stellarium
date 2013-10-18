@@ -1,11 +1,11 @@
 Summary:	Realistic sky generator
 Name:		stellarium
-Version:	0.12.2
+Version:	0.12.4
 Release:	1
 License:	GPL v2
 Group:		X11/Applications/Science
 Source0:	http://downloads.sourceforge.net/stellarium/%{name}-%{version}.tar.gz
-# Source0-md5:	63572e71e15ffad4001d6c93bbc34180
+# Source0-md5:	4d2ec96b9b4d9c8fc722f864409cf4fa
 URL:		http://www.stellarium.org/
 BuildRequires:	OpenGL-devel
 BuildRequires:	QtGui-devel
@@ -36,7 +36,7 @@ like ground, landscape, fog, etc.
 %prep
 %setup -q
 
-sed -i 's|-Wall|-Wall %{rpmcxxflags}|g' CMakeLists.txt
+%{__sed} -i 's|-Wall|-Wall %{rpmcxxflags}|g' CMakeLists.txt
 
 %build
 mkdir build
